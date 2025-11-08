@@ -77,17 +77,17 @@ export const usersRelations = relations(users, ({ many }) => ({
 export const habitsRelations = relations(habits, ({ one, many }) => ({
   user: one(users, {
     fields: [habits.userId],
-    references: [users.id]
+    references: [users.id],
   }),
   entries: many(entries),
-  habitTags: many(habitTags)
+  habitTags: many(habitTags),
 }))
 
 export const entriesRelations = relations(entries, ({ one }) => ({
-    habit: one(habits, {
-        fields: [entries.habitId],
-        references: [habits.id]
-    })
+  habit: one(habits, {
+    fields: [entries.habitId],
+    references: [habits.id],
+  }),
 }))
 
 export const tagsRelations = relations(tags, ({ many }) => ({
@@ -95,15 +95,16 @@ export const tagsRelations = relations(tags, ({ many }) => ({
 }))
 
 export const habitTagsRelations = relations(habitTags, ({ one }) => ({
-    habit: one(habits, {
-        fields: [habitTags.habitId],
-        references: [habits.id]
-    }),
-    tag: one(tags, {
-        fields: [habitTags.tagId],
-        references: [tags.id]
-    }),
+  habit: one(habits, {
+    fields: [habitTags.habitId],
+    references: [habits.id],
+  }),
+  tag: one(tags, {
+    fields: [habitTags.tagId],
+    references: [tags.id],
+  }),
 }))
+
 
 export type User     = typeof users.$inferSelect
 export type Habit    = typeof habits.$inferSelect
@@ -112,4 +113,4 @@ export type Tag      = typeof tags.$inferSelect
 export type HabitTag = typeof habitTags.$inferSelect
 
 export const insertUserSchema = createInsertSchema(users)
-export const selectUserSchema = createSelectSchema(users)
+export const selectUserSchema = createInsertSchema(users)
