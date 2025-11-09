@@ -1,10 +1,13 @@
 import type { Request, Response } from 'express'
-import bcrypt from 'bcrypt'
 import { db } from '../db/connections.ts'
 import { users, type NewUser } from '../db/schema.ts'
 import { generateToken } from '../utils/jwt.ts'
 import { comparePasswords, hashPassword } from '../utils/passwords.ts'
 import { eq } from 'drizzle-orm'
+import { createSecretKey } from 'crypto'
+import env from '../../env.ts'
+import { jwtVerify, type JWTPayload } from 'jose'
+import { type JwtPayload } from '../utils/jwt.ts'
 
 export const register = async (
   req: Request<any, any, NewUser>,
@@ -84,4 +87,11 @@ export const login = async (req: Request, res: Response) => {
     console.error('Loging error', e)
     res.status(500).json({ error: 'Failed to login' })
   }
+}
+
+export const verifyToken = async (token: string): Promise<JwtPayload> => {
+  const secretKey = createSecretKey(env.JWT_SECRET, 'utf-8')
+  const { payload } = await jwtVerify(token, secretKey)
+
+  return payload as unknown as JwtPayload
 }
